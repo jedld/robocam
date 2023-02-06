@@ -1,0 +1,6 @@
+[
+ {"channel": 0, "target": 6000, "accel": 25},
+ {"channel": 1, "target": 6000, "accel": 25},
+ {"channel": 2, "target": 6000, "accel": 25},
+ {"channel": 3, "target": 6000, "accel": 25}
+]

@@ -1,0 +1,35 @@
+<table class="table">
+  <thead>
+    <tr>
+      <td>
+        Label
+      </td>
+      <td>
+        Motion
+      </td>
+      <td>
+        Set
+      </td>
+      <td>
+        Image
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+    {% for bookmark in bookmarks %}
+
+    <tr class="bookmark-row" id="bookmark-{{bookmark['id']}}" data-id="{{bookmark['id']}}">
+      <td class="col-md-1"><input type="text" class="form-control form-inline" value="{{bookmark['label']}}" readonly/></td>
+      <td><input type="text" class="form-control form-inline" value="{{ bookmark['content']}}" readonly> </input></td>
+      <td><button class="btn btn-secondary btn-set-bookmark" data-id="{{bookmark['id']}}">Set</button>
+      <button class="btn btn-danger btn-delete-bookmark" data-id="{{bookmark['id']}}">Delete</button>
+    </td>
+    <td>
+      <a href="/cached_image/{{bookmark['id']}}" target="_blank">
+      <img class="img-thumbnail image-thumb-{{bookmark['id']}}" src="/cached_image/{{bookmark['id']}}"/></a>
+    </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+
+</table>

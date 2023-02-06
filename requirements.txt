@@ -1,1 +1,6 @@
-flask
+asgiref
+flask[async]
+pyserial
+pillow
+# picamera2
+promise

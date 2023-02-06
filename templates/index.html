@@ -1,0 +1,79 @@
+<!doctype html>
+<title>Robocam</title>
+<head>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="static/app.css?{{random_number}}">
+  <script
+  src="https://code.jquery.com/jquery-3.6.3.min.js"
+  integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+  crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+  <script src="static/app.js?{{random_number}}"></script>
+</head>
+<body>
+  <h1>Welcome to Robocam</h1>
+  <div class="container-fluid">
+    <div class="row">
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md-7">
+          <button class="btn btn-primary stow-button">Stow</button>
+          <button class="btn btn-primary reset-button">Reset</button>
+        </div>
+      </div>
+      {% for position in positions %}
+      <div class="row row-{{position[0]}} row-channel-container form-group" data-channel="{{position[0]}}">
+        <div class="col-sm-2">
+          {{position[1]}}:
+        </div>
+        <div class="col-md-4">
+          <div class="slidecontainer from-group">
+            <input type="range" min="{{position[2][1]}}" max="{{position[2][2]}}" value="{{position[2][0]}}" class="slider form-range servo-control form-inline" data-channel="{{position[0]}}">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <input type="text" class="servo-value form-inline" value="{{position[2][0]}}"/>
+        </div>
+        <div class="col-md-1">
+          <button class="btn btn-secondary btn-set  form-inline">Set</button>
+        </div>
+      </div>
+      {% endfor %}
+      <div class="row save-panel">
+        <div class="col-md-3"><input type="text" class="label save-label form-control" value=""/></div>
+        <div class="col-md-2"> <button class="btn btn-primary save-button form-control disabled">Save</button></div>
+      </div>
+    </div>
+    <div class="col-md-4 img-container">
+      <img src="static/sample.jpg" class="img-fluid current-img"/><button id="refresh_image" class="btn btn-primary">Refresh</button>
+    </div>
+    </div>
+
+    <!-- <div class="row">
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">X/Y Control</h5>
+          <button class="btn forward-btn btn-primary">Forward</button>
+          <button class="btn backward-btn btn-primary">Backward</button>
+        </div>
+      </div>
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">X/Y Control</h5>
+          <button class="btn up-btn btn-primary">Up</button>
+          <button class="btn down-btn btn-primary">Down</button>
+        </div>
+      </div>
+    </div> -->
+    <div class="row container-fluid">
+      <button class="btn btn-secondary" id="refresh-all-button">Refresh All</button>
+    </div>
+    <div class="row container-bookmarks">
+      {% with bookmarks=bookmarks %}
+      {% include "bookmarks.html" %}
+      {% endwith %}
+    </div>
+  </div>
+</body>
+
