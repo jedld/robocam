@@ -6,7 +6,7 @@ raspberry pi camera module mounted on it. This software allows for storing vario
 camera angles and allow for automated image capture of those camera angles.
 
 ![Alt text](robocam.jpg?raw=true "Robocam")
-![Alt text](sample2?raw=true "Robocam")
+![Alt text](sample2.png?raw=true "Robocam")
 
 
 I've created this for enabling remote DnD RPG sessions but can in theory be used for other turn based games.
