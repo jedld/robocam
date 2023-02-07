@@ -42,7 +42,7 @@ def index():
 @app.route("/stop", methods=['POST'])
 def stop():
     for s in servo_config.SERVO_CONFIG:
-        servo.setTarget(s["channel"], 0)
+        servo.shutoff(s["channel"])
     image_capture_worker.clear()
     return "OK"
 

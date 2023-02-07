@@ -93,6 +93,13 @@ class Controller:
         self.sendCmd(cmd)
         # Record Target value
         self.Targets[chan] = target
+
+    def shutoff(self, chan):
+        cmd = chr(0x04) + chr(chan) + chr(0x0) + chr(0x0)
+        self.sendCmd(cmd)
+        # Record Target value
+        self.Targets[chan] = 0
+
         
     # Set speed of channel
     # Speed is measured as 0.25microseconds/10milliseconds

@@ -22,6 +22,10 @@ class Dummy:
         print(f"target {channel}: {value}")
         self.target[channel] = value
 
+    def shutoff(self, channel):
+        print(f"target channel shutdown")
+        self.target[channel] = 0
+
     def getPosition(self, channel):
         return self.target.get(channel, 0)
 
