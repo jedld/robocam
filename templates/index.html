@@ -21,6 +21,9 @@
           <button class="btn btn-primary stow-button">Stow</button>
           <button class="btn btn-primary reset-button">Reset</button>
         </div>
+        <div class="col-md-2">
+          <button class="btn btn-danger stop-button">Stop Motors</button>
+        </div>
       </div>
       {% for position in positions %}
       <div class="row row-{{position[0]}} row-channel-container form-group" data-channel="{{position[0]}}">

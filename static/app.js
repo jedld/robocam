@@ -31,6 +31,14 @@ $.when( $.ready ).then(function() {
     $('.img-container img').attr('src', 'data:image/jpg;base64,' + data)
   });
 
+  $('.stop-button').on('click', function(e) {
+    elem = $(this);
+    elem.prop("disabled", true);
+    jQuery.post("/stop", function(data) {
+      elem.prop("disabled", false)
+    })
+  })
+
   $('#refresh_image').on('click', function(e) {
     elem = $(this);
     elem.prop("disabled", true);

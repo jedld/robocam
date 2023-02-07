@@ -39,6 +39,13 @@ def index():
         positions.append((s["channel"], s["label"], [servo.getPosition(s["channel"]), servo.getMin(s["channel"]), servo.getMax(s["channel"])]))
     return render_template('index.html', positions=positions, bookmarks = bookmarks, random_number = time.time_ns())
 
+@app.route("/stop", methods=['POST'])
+def stop():
+    for s in servo_config.SERVO_CONFIG:
+        servo.setTarget(s["channel"], 0)
+    image_capture_worker.clear()
+    return "OK"
+
 @app.route("/set/<id>", methods=['POST'])
 def set(id):
     conn = get_db_connection()

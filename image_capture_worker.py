@@ -62,6 +62,10 @@ class JobStatus:
 def get_servo():
   return servo
 
+def clear():
+  with IMAGE_CAPTURE_QUEUE.mutex:
+    IMAGE_CAPTURE_QUEUE.queue.clear()
+
 def enqueue_image_job(index):
   jobstatus = JobStatus()
   IMAGE_CAPTURE_QUEUE.put(("image", index, jobstatus))
