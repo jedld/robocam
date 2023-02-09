@@ -26,22 +26,24 @@ picam2.configure(capture_config)
 def capture_image(index = 0, doFlip = False):
   picam2.start(show_preview=False)
   picam2.autofocus_cycle()
-
-  target_filename = f"/tmp/current_{index}.jpg"
+  captures_directory = os.environ.get("OUTPUT",f"captures")
+  if not os.path.exists(captures_directory):
+      os.makedirs(captures_directory, exist_ok=True)
+  target_filename = os.path.join(captures_directory, f"current_{index}.jpg")
 
   if (os.path.exists(target_filename)):
-    destination_directory = os.environ.get("OUTPUT",f"captures/captures_{index}")
+    destination_directory = os.path.join(captures_directory, f"captures_{index}")
     if not os.path.exists(destination_directory):
       os.makedirs(destination_directory, exist_ok=True)
     os.rename(target_filename, os.path.join(destination_directory, f"{int(time.time())}_{os.path.basename(target_filename)}"))
-  fname = f"/captures/current_{index}.jpg"
-  picam2.start_and_capture_file(fname)
+
+  picam2.start_and_capture_file(target_filename)
   if doFlip:
-    img = Image.open(fname, 'rw')
+    img = Image.open(target_filename, 'rw')
     flippedImage = ImageOps.flip(img)
-    flippedImage.save(fname)
+    flippedImage.save(target_filename)
   picam2.stop()
   if os.environ.get('TEST'):
     return 'sample.jpg'
   else:
-    return fname
+    return target_filename
