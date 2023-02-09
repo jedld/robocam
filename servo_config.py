@@ -12,7 +12,9 @@ SERVO_CONFIG = [
   {
     "channel": 1,
     "label": "Base rotation",
-    "stow" : 4034
+    "stow" : 4034,
+    "min" : 3000,
+    "max" : 9000
   },
   {
     "channel": 2,

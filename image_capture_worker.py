@@ -53,7 +53,7 @@ else:
     servo = maestro.Controller('/dev/ttyAMA0')
 
 for s in servo_config.SERVO_CONFIG:
-    servo.setRange(s["channel"], 4000, 8000)
+    servo.setRange(s["channel"], s.get("min", 4000), s.get("max",8000))
     servo.setAccel(s["channel"], 25)
     servo.setSpeed(s["channel"], 20)
     servo.setTarget(s["channel"], 6000)
