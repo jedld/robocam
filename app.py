@@ -180,7 +180,7 @@ def motion():
 
 @app.route("/servo/<int:channel>/<int:target>", methods=['POST'])
 def move_servo(channel, target):
-    if (servo.getMin(channel) < target and servo.getMax(channel) > target):
+    if (servo.getMin(channel) <= target and target <= servo.getMax(channel)):
         servo.setTarget(channel, int(target))
 
         # sleep while servo is still moving
