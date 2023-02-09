@@ -39,7 +39,7 @@ def capture_image(index = 0, doFlip = False):
 
   picam2.start_and_capture_file(target_filename)
   if doFlip:
-    img = Image.open(target_filename, 'rw')
+    img = Image.open(target_filename, 'r')
     flippedImage = ImageOps.flip(img)
     flippedImage.save(target_filename)
   picam2.stop()
