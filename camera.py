@@ -1,5 +1,6 @@
 import os
 import time
+from PIL import Image, ImageOps
 
 if os.environ.get('TEST'):
   class Picamera2:
@@ -22,7 +23,7 @@ picam2 = Picamera2()
 capture_config = picam2.create_still_configuration()
 picam2.configure(capture_config)
 
-def capture_image(index = 0):
+def capture_image(index = 0, doFlip = False):
   picam2.start(show_preview=False)
   picam2.autofocus_cycle()
 
@@ -33,10 +34,14 @@ def capture_image(index = 0):
     if not os.path.exists(destination_directory):
       os.makedirs(destination_directory, exist_ok=True)
     os.rename(target_filename, os.path.join(destination_directory, f"{int(time.time())}_{os.path.basename(target_filename)}"))
-    
-  picam2.start_and_capture_file(f"/tmp/current_{index}.jpg")
+  fname = f"/captures/current_{index}.jpg"
+  picam2.start_and_capture_file(fname)
+  if doFlip:
+    img = Image.open(fname, 'rw')
+    flippedImage = ImageOps.flip(img)
+    flippedImage.save(fname)
   picam2.stop()
   if os.environ.get('TEST'):
     return 'sample.jpg'
   else:
-    return f"/tmp/current_{index}.jpg"
+    return fname

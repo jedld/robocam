@@ -91,7 +91,13 @@ def image_capture_worker():
     task, item, jobstatus = IMAGE_CAPTURE_QUEUE.get()
     if task == "image":
       print(f"processing image job {item}")
-      fname = camera.capture_image(item)
+      positions = utils.get_current_position(servo)
+
+      # check veritical camera position if < 6000 flip the image
+      if positions[0] < 6000: 
+        fname = camera.capture_image(item, True)
+      else:
+        fname = camera.capture_image(item)
       jobstatus.done = True
       jobstatus.result = fname
     elif task == "motion":
