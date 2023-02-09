@@ -57,7 +57,7 @@ def set(id):
     servo_status_position = None
     for m in moves:
         servo_status_position =image_capture_worker.enqueue_motion_job(m['channel'], m['target'])
-        image_status_position =image_capture_worker.enqueue_image_job(bookmark['id'])
+    image_status_position =image_capture_worker.enqueue_image_job(bookmark['id'])
     while not image_status_position.done:
         time.sleep(1)
     return json.dumps(servo_status_position)
@@ -118,11 +118,13 @@ def currentImage(id):
 
 @app.route("/cached_image/<id>")
 def cachedImage(id):
-    return send_file(f"/tmp/current_{id}.jpg", mimetype='image/jpg')
+    captures_directory = os.environ.get("OUTPUT",f"captures")
+    return send_file(os.path.join(captures_directory, f"current_{id}.jpg"), mimetype='image/jpg')
 
 @app.route("/cached_image_js/<id>")
 def cachedImageJs(id):
-    img = Image.open(f"/tmp/current_{id}.jpg", mode='r')
+    captures_directory = os.environ.get("OUTPUT",f"captures")
+    img = Image.open(os.path.join(captures_directory, f"current_{id}.jpg"), mode='r')
     img_byte_arr = io.BytesIO()
     img.save(img_byte_arr, format='JPEG')
     my_encoded_img = base64.encodebytes(img_byte_arr.getvalue()).decode('ascii')
