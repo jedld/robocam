@@ -60,7 +60,7 @@ def set(id):
     image_status_position =image_capture_worker.enqueue_image_job(bookmark['id'])
     while not image_status_position.done:
         time.sleep(1)
-    return json.dumps(servo_status_position)
+    return json.dumps(servo_status_position.result)
 
 # loop through all bookmarks and refresh them
 @app.route("/refresh_all", methods=['POST'])
