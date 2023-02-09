@@ -94,7 +94,7 @@ def image_capture_worker():
       positions = utils.get_current_position(servo)
 
       # check veritical camera position if < 6000 flip the image
-      if positions[0] < 6000: 
+      if positions[0][1] < 6000: 
         fname = camera.capture_image(item, True)
       else:
         fname = camera.capture_image(item)
