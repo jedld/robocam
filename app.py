@@ -52,7 +52,7 @@ def set(id):
     bookmarks = conn.execute('SELECT * FROM bookmarks WHERE id = ?', [id]).fetchall()
     conn.close()
     bookmark = bookmarks[0]
-    retract = bookmarks['retract']
+    retract = bookmark['retract']
     moves = json.loads(bookmark['content'])
     image_status_position = None
     servo_status_position = None
@@ -61,7 +61,7 @@ def set(id):
     image_status_position =image_capture_worker.enqueue_image_job(bookmark['id'])
     while not image_status_position.done:
         time.sleep(1)
-    if bookmark['retract'] == 1:
+    if retract == 1:
         servo_status_position = utils.enqueue_retract(image_capture_worker)
     return json.dumps(servo_status_position.result)
 
