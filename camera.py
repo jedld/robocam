@@ -36,7 +36,7 @@ def capture_image2(index = 0, doFlip = False):
       os.makedirs(destination_directory, exist_ok=True)
     os.rename(target_filename, os.path.join(destination_directory, f"{int(time.time())}_{os.path.basename(target_filename)}"))
 
-  picam2.start_and_capture_file(target_filename)
+  picam2.capture_file(target_filename)
   if doFlip:
     img = Image.open(target_filename, 'r')
     flippedImage = ImageOps.flip(img)
