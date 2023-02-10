@@ -85,11 +85,26 @@ def enqueue_wait():
   IMAGE_CAPTURE_QUEUE.put(("wait", [], jobstatus))
   return jobstatus
 
+def enqueue_start():
+  jobstatus = JobStatus()
+  IMAGE_CAPTURE_QUEUE.put(("start_cam", [], jobstatus))
+  return jobstatus
+
+def enqueue_stop():
+  jobstatus = JobStatus()
+  IMAGE_CAPTURE_QUEUE.put(("stop_cam", [], jobstatus))
+  return jobstatus
+
 def image_capture_worker():
+  picam2 = camera.picam2
   print("Image Capture Worker Started")
   while True:
     task, item, jobstatus = IMAGE_CAPTURE_QUEUE.get()
-    if task == "image":
+    if task == "start_cam":
+      picam2.start(show_preview=False)
+    elif task == "stop_cam":
+      picam2.stop()
+    elif task == "image":
       print(f"processing image job {item}")
       positions = utils.get_current_position(servo)
 

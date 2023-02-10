@@ -23,8 +23,7 @@ picam2 = Picamera2()
 capture_config = picam2.create_still_configuration()
 picam2.configure(capture_config)
 
-def capture_image(index = 0, doFlip = False):
-  picam2.start(show_preview=False)
+def capture_image2(index = 0, doFlip = False):
   picam2.autofocus_cycle()
   captures_directory = os.environ.get("OUTPUT",f"captures")
   if not os.path.exists(captures_directory):
@@ -42,8 +41,14 @@ def capture_image(index = 0, doFlip = False):
     img = Image.open(target_filename, 'r')
     flippedImage = ImageOps.flip(img)
     flippedImage.save(target_filename)
-  picam2.stop()
+
   if os.environ.get('TEST'):
     return 'sample.jpg'
   else:
     return target_filename
+
+def capture_image(index = 0, doFlip = False):
+  picam2.start(show_preview=False)
+  result = capture_image2(index, doFlip)
+  picam2.stop()
+  return result

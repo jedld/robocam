@@ -56,9 +56,11 @@ def set(id):
     moves = json.loads(bookmark['content'])
     image_status_position = None
     servo_status_position = None
+    image_capture_worker.enqueue_start()
     for m in moves:
         servo_status_position =image_capture_worker.enqueue_motion_job(m['channel'], m['target'])
     image_status_position =image_capture_worker.enqueue_image_job(bookmark['id'])
+    image_capture_worker.enqueue_stop()
     while not image_status_position.done:
         time.sleep(1)
     if retract == 1:
@@ -72,6 +74,7 @@ def refresh_all():
     bookmarks = conn.execute('SELECT * FROM bookmarks').fetchall()
     conn.close()
     image_status_position = None
+    image_capture_worker.enqueue_start()
     for bookmark in bookmarks:
         moves = json.loads(bookmark['content'])
         for m in moves:
@@ -82,6 +85,7 @@ def refresh_all():
             final_servo_position = utils.enqueue_retract(image_capture_worker)
    
     # stow arm out of the way
+    image_capture_worker.enqueue_stop()
     final_servo_position = utils.enqueue_stow(image_capture_worker)
     while not final_servo_position.done:
         print("blocking until all jobs are done")
@@ -117,7 +121,9 @@ def save():
 
 @app.route("/image/<id>")
 def currentImage(id):
+    image_capture_worker.enqueue_start()
     future = image_capture_worker.enqueue_image_job(id)
+    image_capture_worker.enqueue_stop()
     while not future.done:
         time.sleep(1)
     print("future done")
