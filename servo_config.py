@@ -9,21 +9,21 @@ SERVO_CONFIG = [
   {
     "channel": 4,
     "label":  "Camera Horizontal",
-    "stow": 7850,
+    "stow": 9500,
     "min" : 2500,
     "max" : 9500
   },
   {
     "channel": 1,
     "label": "Base rotation",
-    "stow" : 4034,
+    "stow" : 2437,
     "min" : 2000,
     "max" : 10000
   },
   {
     "channel": 2,
     "label": "Inner Arm",
-    "stow": 4239,
+    "stow": 3968,
     "min" : 3968,
     "max" : 9000
   },

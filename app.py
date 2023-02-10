@@ -52,6 +52,7 @@ def set(id):
     bookmarks = conn.execute('SELECT * FROM bookmarks WHERE id = ?', [id]).fetchall()
     conn.close()
     bookmark = bookmarks[0]
+    retract = bookmarks['retract']
     moves = json.loads(bookmark['content'])
     image_status_position = None
     servo_status_position = None
@@ -60,6 +61,8 @@ def set(id):
     image_status_position =image_capture_worker.enqueue_image_job(bookmark['id'])
     while not image_status_position.done:
         time.sleep(1)
+    if bookmark['retract'] == 1:
+        servo_status_position = utils.enqueue_retract(image_capture_worker)
     return json.dumps(servo_status_position.result)
 
 # loop through all bookmarks and refresh them
@@ -75,6 +78,8 @@ def refresh_all():
             image_capture_worker.enqueue_motion_job(m['channel'], m['target'])
         image_capture_worker.enqueue_wait()
         image_capture_worker.enqueue_image_job(bookmark['id'])
+        if bookmark['retract'] == 1:
+            final_servo_position = utils.enqueue_retract(image_capture_worker)
    
     # stow arm out of the way
     final_servo_position = utils.enqueue_stow(image_capture_worker)
@@ -97,8 +102,14 @@ def delete(id):
 def save():
     label = request.form['label']
     move_list = request.form['move_list']
+    retract_form = request.form.get('retract', 'false')
+    if retract_form == 'true':
+        retract = 1
+    else:
+        retract = 0
+
     conn = get_db_connection()
-    conn.execute('INSERT INTO bookmarks (label, content) VALUES (?, ?)', (label, move_list))
+    conn.execute('INSERT INTO bookmarks (label, content, retract) VALUES (?, ?, ?)', (label, move_list, retract))
     conn.commit()
     bookmarks = conn.execute('SELECT * FROM bookmarks').fetchall()
     conn.close()

@@ -6,6 +6,10 @@ def enqueue_stow(worker):
         worker.enqueue_motion_job(s['channel'], s['stow'])
     return worker.enqueue_wait()
 
+def enqueue_retract(worker):
+    worker.enqueue_motion_job(2, 3698)
+    return worker.enqueue_wait()
+
 def get_current_position(servo, max_timeout = 30):
     positions = []
 

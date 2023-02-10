@@ -168,14 +168,13 @@ $.when( $.ready ).then(function() {
   $('.save-button').on('click', function() {
     let motion_list = []
     let label = $('.save-label').val()
+    let autoRetract = $('#checkbox-retract')[0].checked;
     $('.row-channel-container').each(function() {
       let row_container = $(this);
       let target_value = row_container.find('.servo-value')
       motion_list.push(
         {
-          "accel" : 25,
           "channel" : row_container.data('channel'),
-          "speed" : 30,
           "target" : target_value.val()
         }
       )
@@ -183,6 +182,7 @@ $.when( $.ready ).then(function() {
 
     jQuery.post( '/save' , {
       "label" : label,
+      "retract" : autoRetract,
       "move_list" : JSON.stringify(motion_list)
     } , function(response) {
       $('.container-bookmarks').html(response)

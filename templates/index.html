@@ -45,6 +45,7 @@
       {% endfor %}
       <div class="row save-panel">
         <div class="col-md-3"><input type="text" class="label save-label form-control" value=""/></div>
+        <div class="col-m2-1"><input type="checkbox" class="auto-retract" id="checkbox-retract"/>Auto retract</div>
         <div class="col-md-2"> <button class="btn btn-primary save-button form-control disabled">Save</button></div>
       </div>
     </div>
@@ -70,7 +71,7 @@
       </div>
     </div> -->
     <div class="row container-fluid">
-      <button class="btn btn-secondary" id="refresh-all-button">Refresh All</button>
+      <button class="btn btn-primary" id="refresh-all-button">Refresh All</button>
     </div>
     <div class="row container-bookmarks">
       {% with bookmarks=bookmarks %}
