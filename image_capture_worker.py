@@ -101,9 +101,15 @@ def image_capture_worker():
   while True:
     task, item, jobstatus = IMAGE_CAPTURE_QUEUE.get()
     if task == "start_cam":
+      print("Start Camera")
       picam2.start(show_preview=False)
+      jobstatus.done = True
+      jobstatus.result = None
     elif task == "stop_cam":
+      print("Stop Camera")
       picam2.stop()
+      jobstatus.done = True
+      jobstatus.result = None
     elif task == "image":
       print(f"processing image job {item}")
       positions = utils.get_current_position(servo)
