@@ -110,9 +110,9 @@ def image_capture_worker():
 
       # check veritical camera position if < 6000 flip the image
       if positions[0][1] < 6000: 
-        fname = camera.capture_image(item, True)
+        fname = camera.capture_image2(item, True)
       else:
-        fname = camera.capture_image(item)
+        fname = camera.capture_image2(item)
       jobstatus.done = True
       jobstatus.result = fname
     elif task == "motion":
