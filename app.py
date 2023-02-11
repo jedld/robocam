@@ -154,9 +154,9 @@ def cachedImageJs(id):
 @app.route("/current_xy", methods= ['POST', 'GET'])
 def current_xy():
     positions = utils.get_current_position(servo)
-    q1 = ((positions[3] + 3000) / (9000-3000)) * 90
-    q2 = (positions[1] + 3000) / (9000 - 3000) * 180
-    q3 = (positions[2] + 3000) / (9000 - 3000) * 180
+    q1 = ((positions[3][1] + 3000) / (9000-3000)) * 90
+    q2 = (positions[1][1] + 3000) / (9000 - 3000) * 180
+    q3 = (positions[2][1] + 3000) / (9000 - 3000) * 180
     return [q1, q2, q3]
 
 # @app.route("/xycoord", methods=['POST', 'GET'])
