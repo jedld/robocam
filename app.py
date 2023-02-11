@@ -16,11 +16,11 @@ import servo_config
 import image_capture_worker
 from PIL import Image
 from flask import send_file
-from kinematic_model import EEZYbotARM_Mk2
+# from kinematic_model import EEZYbotARM_Mk2
 
 _thread.start_new_thread(image_capture_worker.image_capture_worker, ())
 
-myRobotArm = EEZYbotARM_Mk2(initial_q1=0, initial_q2=0, initial_q3=0)
+# myRobotArm = EEZYbotARM_Mk2(initial_q1=0, initial_q2=0, initial_q3=0)
 
 def get_db_connection():
     conn = sqlite3.connect('database.db')
