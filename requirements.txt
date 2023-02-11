@@ -2,5 +2,6 @@ asgiref
 flask[async]
 pyserial
 pillow
+matplotlib
 # picamera2
 promise

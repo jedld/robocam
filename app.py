@@ -16,8 +16,11 @@ import servo_config
 import image_capture_worker
 from PIL import Image
 from flask import send_file
+from kinematic_model import EEZYbotARM_Mk2
 
 _thread.start_new_thread(image_capture_worker.image_capture_worker, ())
+
+myRobotArm = EEZYbotARM_Mk2(initial_q1=0, initial_q2=0, initial_q3=0)
 
 def get_db_connection():
     conn = sqlite3.connect('database.db')
@@ -146,6 +149,15 @@ def cachedImageJs(id):
     img.save(img_byte_arr, format='JPEG')
     my_encoded_img = base64.encodebytes(img_byte_arr.getvalue()).decode('ascii')
     return my_encoded_img
+
+
+@app.route('/current_xy', methods= ['POST', 'GET'])
+def current_xy():
+    positions = utils.get_current_position(servo)
+    q1 = ((positions[3] + 3000) / (9000-3000)) * 90
+    q2 = (positions[1] + 3000) / (9000 - 3000) * 180
+    q3 = (positions[2] + 3000) / (9000 - 3000) * 180
+    return [q1, q2, q3]
 
 # @app.route("/xycoord", methods=['POST', 'GET'])
 # def xycoord():
