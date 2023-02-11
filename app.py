@@ -151,7 +151,7 @@ def cachedImageJs(id):
     return my_encoded_img
 
 
-@app.route('/current_xy', methods= ['POST', 'GET'])
+@app.route("/current_xy", methods= ['POST', 'GET'])
 def current_xy():
     positions = utils.get_current_position(servo)
     q1 = ((positions[3] + 3000) / (9000-3000)) * 90
