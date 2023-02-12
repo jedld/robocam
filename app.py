@@ -171,7 +171,7 @@ def set_xy():
 
     m1 = ((q1  + 45) / 90) * (9000 - 3000) + 3000
     m2 = (q2 / 180) * (9000 - 3000) + 3000
-    m3 = (-q3 / 180) * (9000 - 3000) + 3000
+    m3 = (-q3 / 180) * (9000 - 3000) + 3516
     image_capture_worker.enqueue_motion_job(1, m1)
     image_capture_worker.enqueue_motion_job(2, m2)
     image_capture_worker.enqueue_motion_job(3, m3)
