@@ -154,7 +154,7 @@ def current_xy():
     positions = utils.get_current_position(servo)
     q1 = ((positions[3][1] - 3000) / (9000 - 3000)) * 90 - 45
     q2 = ((positions[1][1] - 3000) / (9000 - 3000)) * 180
-    q3 = ((positions[2][1] - 3000) / (9000 - 3000)) * 180
+    q3 = -((positions[2][1] - 3000) / (9000 - 3000)) * 180
 
     # Compute forward kinematics
     x, y, z = image_capture_worker.kinematics.forwardKinematics(q1=q1, q2=q2, q3=q3)
@@ -171,7 +171,7 @@ def set_xy():
 
     m1 = ((q1  + 45) / 90) * (9000 - 3000) + 3000
     m2 = (q2 / 180) * (9000 - 3000) + 3000
-    m3 = (q3/ 180) * (9000 - 3000) + 3000
+    m3 = (-q3 / 180) * (9000 - 3000) + 3000
     image_capture_worker.enqueue_motion_job(1, m1)
     image_capture_worker.enqueue_motion_job(2, m2)
     image_capture_worker.enqueue_motion_job(3, m3)

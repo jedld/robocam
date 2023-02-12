@@ -30,7 +30,7 @@ def get_cartesian(kinematics, servo):
     positions = get_current_position(servo)
     q1 = ((positions[2][1] - 3000) / (9000 - 3000)) * 90 - 45
     q2 = ((positions[3][1] - 3000) / (9000 - 3000)) * 180
-    q3 = ((positions[4][1] - 3000) / (9000 - 3000)) * 180
+    q3 = -((positions[4][1] - 3000) / (9000 - 3000)) * 180
 
     # Compute forward kinematics
     x, y, z = kinematics.forwardKinematics(q1=q1, q2=q2, q3=q3)
