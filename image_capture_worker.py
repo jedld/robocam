@@ -5,6 +5,7 @@ import os
 import maestro
 import utils
 import servo_config
+from kinematic_model import EEZYbotARM_Mk2
 
 class Dummy:
     def __init__(self):
@@ -51,6 +52,8 @@ if os.environ.get("TEST"):
     servo = Dummy()
 else:
     servo = maestro.Controller('/dev/ttyAMA0')
+
+kinematics = EEZYbotARM_Mk2(initial_q1=0, initial_q2=90, initial_q3=-90)
 
 for s in servo_config.SERVO_CONFIG:
     servo.setRange(s["channel"], s.get("min", 4000), s.get("max",8000))
@@ -125,6 +128,6 @@ def image_capture_worker():
       print(f"processing motion job {item}")
       servo.setTarget(int(item[0]), int(item[1]))
     elif task == "wait":
-      positions = utils.get_current_position(servo)
+      positions = utils.get_cartesian(kinematics, servo)
       jobstatus.done = True
       jobstatus.result = positions

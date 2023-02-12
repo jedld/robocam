@@ -1,5 +1,7 @@
 import time
 import servo_config
+import json
+from kinematic_model import EEZYbotARM_Mk2
 
 def enqueue_stow(worker):
     for s in servo_config.SERVO_CONFIG:
@@ -22,3 +24,15 @@ def get_current_position(servo, max_timeout = 30):
     for s in servo_config.SERVO_CONFIG:
         positions.append((s["channel"],servo.getPosition(s["channel"])))
     return positions
+
+
+def get_cartesian(kinematics, servo):
+    positions = get_current_position(servo)
+    q1 = ((positions[2][1] - 3000) / (9000 - 3000)) * 90 - 45
+    q2 = ((positions[3][1] - 3000) / (9000 - 3000)) * 180
+    q3 = ((positions[4][1] - 3000) / (9000 - 3000)) * 180
+
+    # Compute forward kinematics
+    x, y, z = kinematics.forwardKinematics(q1=q1, q2=q2, q3=q3)
+
+    return positions, [x, y, z]

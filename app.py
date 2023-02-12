@@ -4,7 +4,6 @@ import maestro
 import time
 from flask import request
 from flask import render_template
-from kinematics import Kinematics
 import os
 import sqlite3
 import utils
@@ -16,11 +15,8 @@ import servo_config
 import image_capture_worker
 from PIL import Image
 from flask import send_file
-# from kinematic_model import EEZYbotARM_Mk2
 
 _thread.start_new_thread(image_capture_worker.image_capture_worker, ())
-
-# myRobotArm = EEZYbotARM_Mk2(initial_q1=0, initial_q2=0, initial_q3=0)
 
 def get_db_connection():
     conn = sqlite3.connect('database.db')
@@ -37,10 +33,12 @@ def index():
     conn.close()
 
     positions = []
-    labels = []
+
     for s in servo_config.SERVO_CONFIG:
         positions.append((s["channel"], s["label"], [servo.getPosition(s["channel"]), servo.getMin(s["channel"]), servo.getMax(s["channel"])]))
-    return render_template('index.html', positions=positions, bookmarks = bookmarks, random_number = time.time_ns())
+
+    _, coords = utils.get_cartesian(image_capture_worker.kinematics, image_capture_worker.servo)
+    return render_template('index.html', coords=enumerate(coords), positions=positions, bookmarks = bookmarks, random_number = time.time_ns())
 
 @app.route("/stop", methods=['POST'])
 def stop():
@@ -61,7 +59,7 @@ def set(id):
     servo_status_position = None
     image_capture_worker.enqueue_start()
     for m in moves:
-        servo_status_position =image_capture_worker.enqueue_motion_job(m['channel'], m['target'])
+        servo_status_position = image_capture_worker.enqueue_motion_job(m['channel'], m['target'])
     image_status_position =image_capture_worker.enqueue_image_job(bookmark['id'])
     image_capture_worker.enqueue_stop()
     while not image_status_position.done:
@@ -154,10 +152,32 @@ def cachedImageJs(id):
 @app.route("/current_xy", methods= ['POST', 'GET'])
 def current_xy():
     positions = utils.get_current_position(servo)
-    q1 = ((positions[3][1] - 3000) / (9000-3000)) * 90
-    q2 = (positions[1][1] - 3000) / (9000 - 3000) * 180
-    q3 = (positions[2][1] - 3000) / (9000 - 3000) * 180
-    return json.dumps([q1, q2, -q3])
+    q1 = ((positions[3][1] - 3000) / (9000 - 3000)) * 90 - 45
+    q2 = ((positions[1][1] - 3000) / (9000 - 3000)) * 180
+    q3 = ((positions[2][1] - 3000) / (9000 - 3000)) * 180
+
+    # Compute forward kinematics
+    x, y, z = image_capture_worker.kinematics.forwardKinematics(q1=q1, q2=q2, q3=q3)
+
+    return json.dumps([x, y, z])
+
+@app.route("/set_xy", methods=['POST'])
+def set_xy():
+    x = float(request.form["x"])
+    y = float(request.form["y"])
+    z = float(request.form["z"])
+
+    q1, q2, q3 = image_capture_worker.kinematics.inverseKinematics(x, y, z)
+    image_capture_worker.enqueue_motion_job(1, q1)
+    image_capture_worker.enqueue_motion_job(2, q2)
+    image_capture_worker.enqueue_motion_job(3, q3)
+    servo_status_position = image_capture_worker.enqueue_wait()
+
+    while not servo_status_position.done:
+        print("blocking until all jobs are done")
+        time.sleep(1)
+    final_servo_position = servo_status_position.result
+    return json.dumps(final_servo_position)
 
 # @app.route("/xycoord", methods=['POST', 'GET'])
 # def xycoord():
@@ -219,6 +239,7 @@ def move_servo(channel, target):
         while (servo.isMoving(channel) and max_timeout > 0):
             time.sleep(1)
             max_timeout -= 1
-
-    return str(servo.getPosition(channel))
+    pos= str(servo.getPosition(channel))
+    _, coords = utils.get_cartesian(image_capture_worker.kinematics, servo)
+    return json.dumps([pos, coords])
 

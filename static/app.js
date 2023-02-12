@@ -49,6 +49,27 @@ $.when( $.ready ).then(function() {
     });
   });
 
+  $('.btn-set-coords').on('click', function(e) {
+    elem = $(this);
+    elem.prop("disabled", true);
+    elem.html('<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>');  
+    jQuery.post("/set_xy", {
+      "x" : $('#coord_0').val(),
+      "y" : $('#coord_1').val(),
+      "z" : $('#coord_2').val()
+    },
+     function(data) {
+      elem.prop("disabled", false)
+      elem.html('Set');  
+      var channel_positions = jQuery.parseJSON(data)[0];
+      $(channel_positions).each(function(index, elem)
+       {
+        $('div.row-' + elem[0] + '.row-channel-container .servo-control').val(elem[1])
+        $('div.row-' + elem[0] + '.row-channel-container .servo-value').val(elem[1])
+      })
+    })
+  })
+
   $('.servo-control').on('change', function(e) {
     elem = $(this);
     let servo_value = elem.closest('.row').find('.servo-value')
@@ -62,8 +83,13 @@ $.when( $.ready ).then(function() {
       elem.prop('disabled', false)
       servo_value.prop('disabled', false)
       servo_set_btn.prop('disabled', false)
-      elem.val(data)
-      servo_value.val(data)
+      data = eval(data)
+      elem.val(data[0])
+      servo_value.val(data[0])
+  
+      $('#coord_0').val(data[1][0])
+      $('#coord_1').val(data[1][1])
+      $('#coord_2').val(data[1][2])
     });
   });
 
@@ -131,7 +157,7 @@ $.when( $.ready ).then(function() {
 
     bookmark_id = elem.data('id')
     jQuery.post( '/set/' + bookmark_id, function(data) {
-      var channel_positions = jQuery.parseJSON(data);
+      var channel_positions = jQuery.parseJSON(data)[0];
       $(channel_positions).each(function(index, elem)
        {
         $('div.row-' + elem[0] + '.row-channel-container .servo-control').val(elem[1])

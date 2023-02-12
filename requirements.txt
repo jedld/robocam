@@ -1,7 +1,8 @@
 asgiref
-flask[async]
+flask
 pyserial
 pillow
 matplotlib
 # picamera2
 promise
+scipy
