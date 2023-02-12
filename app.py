@@ -168,9 +168,13 @@ def set_xy():
     z = float(request.form["z"])
 
     q1, q2, q3 = image_capture_worker.kinematics.inverseKinematics(x, y, z)
-    image_capture_worker.enqueue_motion_job(1, q1)
-    image_capture_worker.enqueue_motion_job(2, q2)
-    image_capture_worker.enqueue_motion_job(3, q3)
+
+    m1 = ((q1  + 45) / 90) * (9000 - 3000) + 3000
+    m2 = (q2 / 180) * (9000 - 3000) + 3000
+    m3 = (q3/ 180) * (9000 - 3000) + 3000
+    image_capture_worker.enqueue_motion_job(1, m1)
+    image_capture_worker.enqueue_motion_job(2, m2)
+    image_capture_worker.enqueue_motion_job(3, m3)
     servo_status_position = image_capture_worker.enqueue_wait()
 
     while not servo_status_position.done:
