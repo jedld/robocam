@@ -157,7 +157,7 @@ def current_xy():
     q1 = ((positions[3][1] - 3000) / (9000-3000)) * 90
     q2 = (positions[1][1] - 3000) / (9000 - 3000) * 180
     q3 = (positions[2][1] - 3000) / (9000 - 3000) * 180
-    return json.dumps([q1, q2, q3])
+    return json.dumps([q1, q2, -q3])
 
 # @app.route("/xycoord", methods=['POST', 'GET'])
 # def xycoord():
